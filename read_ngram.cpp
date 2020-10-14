@@ -3,7 +3,6 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 using namespace Rcpp;
@@ -11,11 +10,11 @@ using namespace Rcpp;
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 
-// version with no pushback
 
-DataFrame read_ngram(   string filename,
-                        vector<string> wordlist
-                       )
+
+DataFrame read_ngram(string filename,
+                     const vector<string> & wordlist
+                    )
 {
 
     // number of words in list
@@ -23,7 +22,7 @@ DataFrame read_ngram(   string filename,
 
 
 
-    // get vector of first 3 chars (speeds up searching)
+    // get vector of first 2 chars (speeds up searching)
     //****************************************************
     StringVector char_vec;
     NumericVector counter_vec;
@@ -34,7 +33,7 @@ DataFrame read_ngram(   string filename,
     for(int i = 0; i < n_words; ++i){
 
         string word = wordlist[i];
-        string first_chars = word.substr(0, 3);
+        string first_chars = word.substr(0, 2);
 
         if(first_chars != old){
             char_vec.push_back (first_chars);
@@ -73,10 +72,10 @@ DataFrame read_ngram(   string filename,
             boost::to_lower(word);
 
 
-            // test if first 3 chars in character list, and get index
-            string char_3 = word.substr(0, 3);
+            // test if first 2 chars in character list, and get index
+            string char_2 = word.substr(0, 2);
 
-            auto it = find(char_vec.begin(), char_vec.end(), char_3);
+            auto it = find(char_vec.begin(), char_vec.end(), char_2);
 
             if (it != char_vec.end()) {
 
@@ -116,9 +115,9 @@ DataFrame read_ngram(   string filename,
                         year_vec[global_counter] = year_int;
 
                         // word count
-                        string wordcount = subdata.substr(comma1 + 1);
-                        size_t comma2 = wordcount.find(",");
-                        wordcount = wordcount.substr(0, comma2);
+                        subdata.erase(0, comma1 + 1);
+                        size_t comma2 = subdata.find(",");
+                        string wordcount = subdata.substr(0, comma2);
 
                         int wordcount_int = std::stoi(wordcount);
                         wordcount_vec[global_counter] = wordcount_int;
