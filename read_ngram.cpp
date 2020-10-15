@@ -5,19 +5,18 @@
 #include <vector>
 #include "first_char_list.h"
 
-using namespace std;
 using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 
-DataFrame read_ngram(string filename,
-                     vector<string> wordlist
+DataFrame read_ngram(std::string filename,
+                     std::vector<std::string> wordlist
                     )
 {
 
     // test if file exists
-    ifstream ifile;
+    std::ifstream ifile;
     ifile.open(filename);
     if(ifile) {
     } else {
@@ -29,9 +28,9 @@ DataFrame read_ngram(string filename,
     int n_words = wordlist.size();
 
 
-    // get vector of first 2 chars (speeds up searching)
-    vector<string> char_vec;
-    vector<int> counter_vec;
+    // get std::vector of first 2 chars (speeds up searching)
+    std::vector<std::string> char_vec;
+    std::vector<int> counter_vec;
     int nchar = 2;
 
     first_char_list(wordlist,
@@ -45,33 +44,33 @@ DataFrame read_ngram(string filename,
     int global_counter = 0;
 
     // output vectors
-    int file_guess = 50000000
+    int file_guess = 50000000;
 
-    vector<string> word_vec(file_guess);
-    NumericVector year_vec(file_guess);
-    NumericVector wordcount_vec(file_guess);
+    std::vector<std::string> word_vec(file_guess);
+    Rcpp::NumericVector year_vec(file_guess);
+    Rcpp::NumericVector wordcount_vec(file_guess);
 
     // read in ngram
-    string ngram;
-    ifstream in(filename);
+    std::string ngram;
+    std::ifstream in(filename);
 
     while (getline(in, ngram)) {
 
         // find first tab
-        string tab = "\t";
+        std::string tab = "\t";
         size_t id_tab = ngram.find(tab);
 
         // get word
         if( id_tab != std::string::npos ){
 
-            string word = ngram.substr(0, id_tab);
+            std::string word = ngram.substr(0, id_tab);
 
             // convert word to lower case
             boost::to_lower(word);
 
 
             // test if first 2 chars in character list, and get index
-            string char_2 = word.substr(0, nchar);
+            std::string char_2 = word.substr(0, nchar);
 
 
             auto it = find(char_vec.begin(), char_vec.end(), char_2);
@@ -105,13 +104,14 @@ DataFrame read_ngram(string filename,
                 // if found
                 if(test == 0){
 
+
                     // erase word from ngram
                     ngram.erase(0, id_tab + tab.length());
 
                     // split on tab
-                    string delimiter = "\t";
+                    std::string delimiter = "\t";
                     size_t pos = 0;
-                    string subdata;
+                    std::string subdata;
 
                     while ((pos = ngram.find(delimiter)) != std::string::npos) {
 
@@ -123,13 +123,13 @@ DataFrame read_ngram(string filename,
 
                         // year
                         size_t comma1 = subdata.find(",");
-                        string year = subdata.substr(0, comma1);
+                        std::string year = subdata.substr(0, comma1);
                         year_vec[global_counter] = std::stoi(year);
 
                         // word count
                         subdata.erase(0, comma1 + 1);
                         size_t comma2 = subdata.find(",");
-                        string wordcount = subdata.substr(0, comma2);
+                        std::string wordcount = subdata.substr(0, comma2);
                         wordcount_vec[global_counter] = std::stoi(wordcount);
 
                         // erase tab
@@ -144,12 +144,12 @@ DataFrame read_ngram(string filename,
                     word_vec[global_counter] = word;
 
                     size_t comma1 = ngram.find(",");
-                    string year = ngram.substr(0, comma1);
+                    std::string year = ngram.substr(0, comma1);
                     year_vec[global_counter] = std::stoi(year);
 
                     ngram.erase(0, comma1 + 1);
                     size_t comma2 = ngram.find(",");
-                    string wordcount = ngram.substr(0, comma2);
+                    std::string wordcount = ngram.substr(0, comma2);
                     wordcount_vec[global_counter] = std::stoi(wordcount);
 
                     // advance global counter
@@ -167,10 +167,11 @@ DataFrame read_ngram(string filename,
     wordcount_vec = wordcount_vec[wordcount_vec != 0 ];
 
     // bind output in dataframe
-    DataFrame output = DataFrame::create( Named("word") =      word_vec,
-                                          Named("year") =      year_vec,
-                                          Named("wordcount") = wordcount_vec
-                                    );
+    DataFrame output = DataFrame::create(
+        Named("word") =      word_vec,
+        Named("year") =      year_vec,
+        Named("wordcount") = wordcount_vec
+    );
 
     return output;
 
