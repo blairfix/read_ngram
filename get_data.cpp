@@ -24,6 +24,11 @@ DataFrame get_data(std::string filename,
     }
 
 
+    if( ids.size() == 0 ){
+        throw std::range_error("ids vector is blank");
+    }
+
+
     // read in ngram data
     // ****************************************************
     int global_counter = 0;

@@ -43,9 +43,11 @@ I'm assuming you're interested in only a small subset of the words/phrases in th
 
 ```
 word        year    match_count
-Breadberry  1785    1
-Breadberry  1795    1
+breadberry  1785    1
+breadberry  1795    1
 ```
+
+`get_words` is designed for case insensitive analysis, so it returns all words as lower case.
 
 
 ### Example
