@@ -18,9 +18,10 @@ circumvallate   1979   261           91
 This data is easily parsed by R functions like `fread()` and `read_tsv()`. The 2020 ngram corpus, however, is provided in a non-standard format, as shown below. Each ngram (a word or phrase) gets one line:
 
 ```
-ngram        year,match_count,volume_count  year,match_count,volume_count   ...
-Breadberry	1785,1,1                     1795,1,1                        ...
+Breadberry  1785,1,1    1795,1,1  ...
 ```
+
+Here, the word is proceeded by a `TAB`, followed by year, match_count, and volume `TAB` year, match_count, and volume ... etc. 
 
 Because ngrams aren't repeated, this format saves space. But it's difficult to parse using standard R functions. That's where `read_ngram` comes in. It provides two function that are designed to be used together. `get_words` tells you the words (or phrases) that are in an ngram file. I assume you're interested only in a subset of these words. After identifying which words/phrases you want, `get_data` parses the ngram file and returns the data. 
 
