@@ -103,4 +103,6 @@ sourceCpp("get_ngrams.cpp")
 sourceCpp("get_data.cpp")
 ```
 
+These functions are also available as part of my [`hmod` package](https://github.com/blairfix/hmod).
+
 
