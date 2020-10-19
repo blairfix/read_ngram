@@ -2,8 +2,8 @@
 
 `read_ngram` provides R functions for parsing data from the [Google ngram 2020 corpus](http://storage.googleapis.com/books/ngrams/books/datasetsv3.html). To use it, first download the Ngram files from the Google repository. `read_ngram` provides two functions for parsing this data efficiently:
 
-* `get_ngrams()`
-* `get_data()`
+* `get_ngrams(filename)`
+* `get_data(filename, ids)`
 
 ### Background
 
