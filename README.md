@@ -2,8 +2,8 @@
 
 `read_ngram` provides R functions for parsing data from the [Google ngram 2020 corpus](http://storage.googleapis.com/books/ngrams/books/datasetsv3.html). To use it, first download the gzip files from the Google repository. `read_ngram` provides two functions for parsing this data efficiently:
 
-* `get_ngrams`
-* `get_data`
+* `get_ngrams()`
+* `get_data()`
 
 ### Background
 
@@ -26,14 +26,14 @@ Here, the ngram is proceeded by a `TAB`, followed by year, match_count, and volu
 Because ngrams aren't repeated, this format saves space. But it's difficult to parse using standard R functions. That's where `read_ngram` comes in. It provides two function that are designed to be used together. `get_ngrams()` tells you the ngrams that are in the file. I assume you're interested only in a subset of these ngrams. After identifying which ngrams you want, `get_data()` parses the ngram file and returns the data. 
 
 
-### `get_ngrams`
+### `get_ngrams()`
 
 `get_ngrams(filename)` tells you what ngrams are in the ngram file. It takes a `filename` as input, and returns a vector of ngrams in the file.
 
 
-### `get_data`
+### `get_data()`
 
-I'm assuming you're interested in only a small subset of the ngrams in the  file. That's where `get_data()` comes in. Once you've used `get_ngrams`, identify the line number of the ngrams for which you want data. Then run `get_data(filename, ids)` with these inputs:
+I'm assuming you're interested in only a small subset of the ngrams in the  file. That's where `get_data()` comes in. Once you've used `get_ngrams()`, identify the line number of the ngrams for which you want data. Then run `get_data(filename, ids)` with these inputs:
 
 *  `filename`: the ngram file you want to parse
 * `ids`: the line numbers you want to read (see example below)
@@ -74,7 +74,7 @@ ngram_data = get_data("1-00016-of-00024", ids)
 
 ### Performance
 
-Because the ngram database is large (the 1-ngram corpus is about 46 GB), it's important to be able to parse it quickly. Assuming you're interested in only a subset of the data, `get_ngrams` and `get_data` parse ngram files much faster than the fastest R parser, `readLines`. The code below extracts data for words in the `grady_augmented` list, and compares it to reading the whole database into R using `readLines`:
+Because the ngram database is large (the 1-ngram corpus is about 46 GB), it's important to be able to parse it quickly. Assuming you're interested in only a subset of the data, `get_ngrams()` and `get_data()` parse ngram files much faster than the fastest R parser, `readLines`. The code below extracts data for words in the `grady_augmented` list, and compares it to reading the whole database into R using `readLines`:
 
 
 ```R
