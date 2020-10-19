@@ -2,7 +2,7 @@
 
 `read_ngram` provides R functions for parsing data from the [Google ngram 2020 corpus](http://storage.googleapis.com/books/ngrams/books/datasetsv3.html). To use it, first download the gzip files from the Google repository. `read_ngram` provides two functions for parsing this data efficiently:
 
-* `get_words`
+* `get_ngrams`
 * `get_data`
 
 ### Background
@@ -21,24 +21,24 @@ This data is easily parsed by R functions like `fread()` and `read_tsv()`. The 2
 Breadberry  1785,1,1    1795,1,1  ...
 ```
 
-Here, the word is proceeded by a `TAB`, followed by year, match_count, and volume `TAB` year, match_count, and volume ... etc. 
+Here, the ngram is proceeded by a `TAB`, followed by year, match_count, and volume `TAB` year, match_count, and volume ... etc. 
 
-Because ngrams aren't repeated, this format saves space. But it's difficult to parse using standard R functions. That's where `read_ngram` comes in. It provides two function that are designed to be used together. `get_words` tells you the words (or phrases) that are in an ngram file. I assume you're interested only in a subset of these words. After identifying which words/phrases you want, `get_data` parses the ngram file and returns the data. 
+Because ngrams aren't repeated, this format saves space. But it's difficult to parse using standard R functions. That's where `read_ngram` comes in. It provides two function that are designed to be used together. `get_ngrams()` tells you the ngrams that are in the file. I assume you're interested only in a subset of these ngrams. After identifying which ngrams you want, `get_data()` parses the ngram file and returns the data. 
 
 
-### `get_words`
+### `get_ngrams`
 
-`get_words` tells you what words (or phrases) are in the ngram file. It takes a `filename` as input, and returns a vector of words/phrases in the ngram file
+`get_ngrams(filename)` tells you what ngrams are in the ngram file. It takes a `filename` as input, and returns a vector of ngrams in the file.
 
 
 ### `get_data`
 
-I'm assuming you're interested in only a small subset of the words/phrases in the ngram file. That's where `get_data` comes in. Once you've used `get_words`, identify the line number of the words for which you want data. Then run `get_data` with these inputs:
+I'm assuming you're interested in only a small subset of the ngrams in the  file. That's where `get_data()` comes in. Once you've used `get_ngrams`, identify the line number of the ngrams for which you want data. Then run `get_data(filename, ids)` with these inputs:
 
 *  `filename`: the ngram file you want to parse
 * `ids`: the line numbers you want to read (see example below)
 
-`get_words` returns a long-form dataframe containing the word/phrase, year and match_count:
+`get_ngrams()` returns a long-form dataframe containing the word/phrase, year and match_count:
 
 
 ```
@@ -47,39 +47,39 @@ breadberry  1785    1
 breadberry  1795    1
 ```
 
-`get_words` is designed for case insensitive analysis, so it returns all words as lower case.
+`get_ngrams` is designed for case insensitive analysis, so it returns all ngrams as lower case.
 
 
 ### Example
 
-Suppose I've downloaded the ngram file `1-00016-of-00024` and put it in the directory `~/Downloads/ngram_2020`. The code below will parse the file and extract data for words that are in the `grady_augmented` word list:
+Suppose I've downloaded the ngram file `1-00016-of-00024` and put it in the directory `~/Downloads/ngram_2020`. The code below will parse the file and extract data for ngrams that are in the `grady_augmented` word list:
 
 ```R
 library(Rcpp)
 
 # source functions
-sourceCpp("get_words.cpp")
+sourceCpp("get_ngrams.cpp")
 sourceCpp("get_data.cpp")
 
-# get words in ngram file
+# get ngrams in ngram file
 setwd("~/Downloads/ngram_2020")
-words = get_words("1-00016-of-00024")
+ngrams = get_ngrams("1-00016-of-00024")
 
-# get data for words in grady_augmented wordlist
+# get data for ngrams in grady_augmented wordlist
 dictionary = lexicon::grady_augmented
-ids = which(words %in% dictionary)
+ids = which(ngrams %in% dictionary)
 ngram_data = get_data("1-00016-of-00024", ids)
 ```
 
 
 ### Performance
 
-Because the ngram database is large (the 1-ngram data is about 46 GB), it's important to be able to parse it quickly. Assuming you're interested in only a subset of the data, `get_words` and `get_data` parse ngram files much faster than the fastest R parser, `readLines`. The code below extracts data for words in the `grady_augmented` list, and compares it to reading the whole database into R using `readLines`:
+Because the ngram database is large (the 1-ngram corpus is about 46 GB), it's important to be able to parse it quickly. Assuming you're interested in only a subset of the data, `get_ngrams` and `get_data` parse ngram files much faster than the fastest R parser, `readLines`. The code below extracts data for words in the `grady_augmented` list, and compares it to reading the whole database into R using `readLines`:
 
 
 ```R
-microbenchmark(
-  words = get_words("1-00016-of-00024"),
+microbenchmark::microbenchmark(
+  ngrams = get_ngrams("1-00016-of-00024"),
   ngram_data = get_data("1-00016-of-00024", ids),
   RreadLines = readLines("1-00016-of-00024"),
   times = 1
@@ -96,10 +96,10 @@ Unit: seconds
 
 ### Installation
 
-To use `read_ngram`, install [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html). Put the source code (`get_words.cpp` and `get_data.cpp`) in the directory of your R script. The source it with the commands:
+To use `read_ngram`, install [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html). Put the source code (`get_ngrams.cpp` and `get_data.cpp`) in the directory of your R script. The source it with the commands:
 
 ```R
-sourceCpp("get_words.cpp")
+sourceCpp("get_ngrams.cpp")
 sourceCpp("get_data.cpp")
 ```
 
