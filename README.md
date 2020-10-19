@@ -88,7 +88,7 @@ microbenchmark::microbenchmark(
 
 Unit: seconds
        expr       min        lq      mean    median        uq       max neval
-      words  2.412359  2.412359  2.412359  2.412359  2.412359  2.412359     1
+      ngrams 2.412359  2.412359  2.412359  2.412359  2.412359  2.412359     1
  ngram_data  4.393013  4.393013  4.393013  4.393013  4.393013  4.393013     1
  RreadLines 21.406342 21.406342 21.406342 21.406342 21.406342 21.406342     1
 
