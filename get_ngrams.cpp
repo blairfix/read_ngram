@@ -3,7 +3,7 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include <vector>
-
+#include <boost/algorithm/string/replace.hpp>
 
 using namespace Rcpp;
 
@@ -12,6 +12,9 @@ using namespace Rcpp;
 
 std::vector<std::string> get_ngrams(std::string filename)
 {
+    // hyphen replace strings
+    std::string hyphen = " - ";
+    std::string hyphen_replace = "-";
 
     // test if file exists
     std::ifstream ifile;
@@ -42,6 +45,10 @@ std::vector<std::string> get_ngrams(std::string filename)
 
             // convert word to lower case
             boost::to_lower(word);
+
+            // remove spaces around hyphen
+            boost::replace_all(word, hyphen, hyphen_replace);
+
 
             output[i] = word;
             i++;
