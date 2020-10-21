@@ -15,10 +15,6 @@ DataFrame get_data(std::string filename,
                    )
 {
 
-    // hyphen replace strings
-    std::string hyphen = " - ";
-    std::string hyphen_replace = "-";
-
     // test if file exists
     std::ifstream ifile;
     ifile.open(filename);
@@ -28,9 +24,8 @@ DataFrame get_data(std::string filename,
     }
 
 
-    // test if ids blank
     if( ids.size() == 0 ){
-        throw std::range_error("ids vector is empty");
+        throw std::range_error("ids vector is blank");
     }
 
 
@@ -71,9 +66,6 @@ DataFrame get_data(std::string filename,
 
                 // convert word to lower case
                 boost::to_lower(word);
-
-                // remove spaces around hyphen
-                boost::replace_all(word, hyphen, hyphen_replace);
 
                 // erase word from ngram
                 ngram.erase(0, id_tab + tab.length());
