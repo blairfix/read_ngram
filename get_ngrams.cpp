@@ -12,48 +12,30 @@ using namespace Rcpp;
 
 std::vector<std::string> get_ngrams(std::string filename)
 {
-
-    // test if file exists
-    std::ifstream ifile;
-    ifile.open(filename);
-    if(ifile) {
-    } else {
+    //1. open input file
+    std::ifstream input_file(filename, std::ifstream::in);
+    if (!input_file.is_open())
+    {
         throw std::range_error("File does not exist");
     }
 
-
-    // read in ngram
+    //2.  read in ngram
     std::string ngram;
-    std::ifstream in(filename);
+    std::list<std::string> output; //store the ouput in a std::list because it can handle insertions in O[1] time.
+    while (getline(input_file, ngram)) 
+    {
+        //get only the ngram from each line, discard all the number information.
+        std::string word = ngram.substr(0, ngram.find("\t"));
 
-    std::vector<std::string> output(5000000);
-    int i = 0;
-
-    while (getline(in, ngram)) {
-
-        // find first tab
-        std::string tab = "\t";
-        size_t id_tab = ngram.find(tab);
-
-        // get word
-        if( id_tab != std::string::npos ){
-
-            std::string word = ngram.substr(0, id_tab);
-
-            // convert word to lower case
+        if (word.length() > 0)
+        {
             boost::to_lower(word);
-
-            output[i] = word;
-            i++;
-
-            if(i == output.size()){
-                std::vector<std::string> B(5000000);
-                output.insert(output.end(), B.begin(), B.end());
-            }
+            output.push_back(word);
         }
     }
 
-    output.erase (output.begin() + i, output.end() );
-    return output;
+    //3. convert output to vector and return
+    std::vector<std::string> result(output.begin(), output.end());
+    return result;
 
 }
