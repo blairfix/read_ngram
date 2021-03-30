@@ -96,7 +96,14 @@ Unit: seconds
 
 ### Installation
 
-To use `read_ngram`, install [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html). Put the source code (`get_ngrams.cpp` and `get_data.cpp`) in the directory of your R script. The source it with the commands:
+To use `read_ngram`, install the following packages:
+
+*  [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) 
+* [BH](https://cran.r-project.org/web/packages/BH/)
+* [Rtools](https://cran.r-project.org/bin/windows/Rtools/history.html) (if you use Windows)
+
+
+Put the source code (`get_ngrams.cpp` and `get_data.cpp`) in the directory of your R script. The source it with the commands:
 
 ```R
 sourceCpp("get_ngrams.cpp")
