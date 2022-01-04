@@ -7,6 +7,7 @@
 
 using namespace Rcpp;
 
+// [[Rcpp::depends(BH)]]
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 

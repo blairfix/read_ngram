@@ -98,7 +98,7 @@ Unit: seconds
 
 To use `read_ngram`, install the following packages:
 
-*  [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) 
+* [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) 
 * [BH](https://cran.r-project.org/web/packages/BH/)
 * [Rtools](https://cran.r-project.org/bin/windows/Rtools/history.html) (if you use Windows)
 
