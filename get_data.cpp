@@ -12,9 +12,9 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 
 
-DataFrame get_data_test(
-			std::string filename,
-			Rcpp::IntegerVector ids
+DataFrame get_data(
+		    std::string filename,
+		    Rcpp::IntegerVector ids
                    )
 {
 
@@ -33,7 +33,7 @@ DataFrame get_data_test(
 
 
     // 2. read in ngram data
-    // ****************************************************
+    // -----------------------------------------------------
 
     // output vectors
     std::list<std::string> word_vec;
@@ -47,18 +47,23 @@ DataFrame get_data_test(
     int line_number = 1;
     int id_counter = 0;
 
-    while (getline(in, ngram)) {
+    // get number of words
+    int nwords = ids.size();
 
-        // test if line in id
-        if( line_number == ids[id_counter] ){
+    // read in file and get data with rows in id vector
+    while (getline(in, ngram) ) {
 
+        // test if line in id and counter is not over nwords
+        if( line_number == ids[id_counter] && id_counter < nwords ){
+
+	    // advance word counter
             id_counter++;
 
             // split line on tab
             std::vector<std::string> line_split;
             boost::split(line_split, ngram, boost::is_any_of("\t") );
 
-            if(line_split.size() > 1){
+            if( line_split.size() > 1 ){
 
                 // make word lower case
                 boost::to_lower( line_split[0] );
@@ -84,6 +89,8 @@ DataFrame get_data_test(
 
 
     // 3. bind output in dataframe
+    // -----------------------------------------------------
+
     DataFrame output = DataFrame::create(
         Named("word") =      word_vec,
         Named("year") =      year_vec,
