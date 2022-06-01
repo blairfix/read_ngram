@@ -11,7 +11,7 @@ using namespace Rcpp;
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 
-DataFrame get_data_old(std::string filename,
+DataFrame get_data(std::string filename,
 		   IntegerVector ids
                    )
 {
