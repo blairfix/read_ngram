@@ -120,7 +120,7 @@ DataFrame get_data_old(std::string filename,
 
             }
 
-
+	    // if at the end of output container, append more rows
             if(global_counter == word_vec.size()){
 
                 std::vector<std::string> B(5000000);
@@ -138,7 +138,7 @@ DataFrame get_data_old(std::string filename,
 
     }
 
-    // erase zeros
+    // erase zeros at end of container
     word_vec.erase (word_vec.begin() + global_counter, word_vec.end() );
     year_vec.erase (year_vec.begin() + global_counter, year_vec.end() );
     wordcount_vec.erase (wordcount_vec.begin() + global_counter, wordcount_vec.end() );
